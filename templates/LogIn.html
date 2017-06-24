@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Log In{%endblock%}
+{% block body %}
+<script>
+function Clicked() {
+	alert("Testing");
+}
+</script>
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="email">Email</label>  
+  <div class="col-md-4">
+  <input id="email" name="email" type="text" placeholder="E-mail" class="form-control input-md" required="">
+  <span class="help-block">Enter your email</span>  
+  </div>
+</div>
+
+<!-- Password input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="password">Password</label>
+  <div class="col-md-4">
+    <input id="password" name="password" type="password" placeholder="Password" class="form-control input-md" required="">
+    <span class="help-block">Enter your password</span>
+  </div>
+</div>
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="login">Log In</label>
+  <div class="col-md-4">
+    <button id="login" name="login" class="btn btn-success">Log In</button>
+  </div>
+</div>
+
+</form>
+{% endblock %}

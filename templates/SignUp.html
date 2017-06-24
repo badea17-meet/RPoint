@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block title %}Bas:IT - Sign Up{% endblock %}
+{% block body %}
+<div class="container">
+<h1><label>Sign Up</label></h1>
+<div class="form-horizontal">
+			<fieldset>
+
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="email">E-mail</label>  
+  <div class="col-md-4">
+  <input id="email" name="email" type="text" placeholder="E-mail" class="form-control input-md" required="">
+  <span class="help-block">Insert your e-mail</span>  
+  </div>
+</div>
+
+<!-- Password input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="password">Password</label>
+  <div class="col-md-4">
+    <input id="password" name="password" type="password" placeholder="Password" class="form-control input-md" required="">
+    <span class="help-block">Insert your password</span>
+  </div>
+</div>
+
+<!-- Password input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="confpassword">Confirm Password</label>
+  <div class="col-md-4">
+    <input id="confpassword" name="confpassword" type="password" placeholder="Confirm Password" class="form-control input-md" required="">
+    <span class="help-block">Confirm your password</span>
+  </div>
+</div>
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="signup">Sign Up</label>
+  <div class="col-md-4">
+    <button id="signup" name="signup" class="btn btn-success" onclick="SignUp()">Sign Up</button>
+  </div>
+</div>
+
+</fieldset>
+
+</form>
+</div>
+{% endblock %}
