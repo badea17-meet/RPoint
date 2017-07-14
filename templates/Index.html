@@ -1,5 +1,11 @@
 {% extends "layout.html" %}
 {% block title %}RPoint - Home{% endblock %}
+{%block scripts%}
+<script>
+var auth = firebase.auth();
+alert(auth.currentUser);
+</script>
+{% endblock %}
 {% block body %}
 
 {% endblock %}

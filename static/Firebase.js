@@ -35,6 +35,8 @@ $.when(
   alert(errorMessage);
 });
   	alert("Account has been created successfully! Proceed to login!");
+    var user = auth.currentUser;
+    alert (user);
   	}
   }
   	
@@ -56,7 +58,7 @@ $.when(
   			var response = confirm("E-mail is not registered! Click <a href=\"/signup\">here</a> to sign up!");
   			if(response==true)
   			{
-  				window.location.replace("/");
+  				
   			}
   		}
   		else if (errorCode=="auth/wrong-password")
@@ -79,7 +81,6 @@ $.when(
   	}
   	else {
   		alert("Welcome back!");
-  		window.location.replace("/");
   	}
   	
   };
@@ -89,19 +90,39 @@ $.when(
 window.onload = function () {
 	var path = window.location.pathname;
 	if(path=="/") {
-		var user = auth.currentUser;
-		if(user == null) {
-			alert("You must be logged in first!");
-			window.location.replace("/login");
-		}
-		else {
-			if(user.displayName==null) {
-				alert("Welcome to our website! You are being redirected to set up your account!");
-				window.location.replace("/settings");
-			}
-		}
-	}
+    firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    alert("Logged in");
+    alert(user.displayName);
+    if(!user.emailVerified)
+    {
+      alert("You must be verified first.");
+      user.sendEmailVerification();
+      auth.signOut();
+      window.location.replace("/login");
+    }
+    if(user.displayName==null)
+    {
+      window.location.replace("/settings");
+    }
+  } else {
+    // No user is signed in.
+  }
+});
+  }
 }
+
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    if(window.location.pathname=="/login")
+    {
+      window.location.replace("/");
+    }
+  } else {
+    // No user is signed in.
+  }
+});
 
 
 
