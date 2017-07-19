@@ -60,7 +60,9 @@
 
 
             marker.setAnimation(google.maps.Animation.BOUNCE);
-            //infoWindow.open(map);
+            infoWindow.setContent('Current Location');
+            infoWindow.setPosition(pos)
+            infoWindow.open(map,marker);
             map.setCenter(pos);
 
 
@@ -69,7 +71,7 @@
               var request = {
                 location: pos,
                 radius: 1000,
-                type: ['restaurant', 'cafe', 'parks']
+                type: ['cafes']
               };
 
               service = new google.maps.places.PlacesService(map);
@@ -92,11 +94,43 @@
         }       
       }
 
+    
+
         function callback(results, status) {
+          var infoWindow2;
           if (status == google.maps.places.PlacesServiceStatus.OK) {
             for (var i = 0; i < results.length; i++) {
+                var IsOpen = 'Open';
+                // if(results[i].opening_hours.open_now){
+                //   IsOpen = 'Open';
+                // }
+                // else{
+                //   IsOpen = 'Closed'
+                // }
+
+                var contentString = '<h3>' + results[i].name + '</h3>' +
+                                    '<p> Address: ' + results[i].formatted_address + '<br/>Contact: ' + results[i].formatted_phone_number + '<br/>' +
+                                    'Status: ' + IsOpen + '<br/>' +
+                                    'Rating: ' + results[i].rating + '/5';
+                                    
+                infoWindow2 = new google.maps.InfoWindow({
+                  content : contentString
+                });
+                
+                //infoWindow2.setContent(results[i].name);
+                infoWindow2.setPosition(results[i].geometry.location)
                 var place = results[i];               
-                createMarker(results[i]);
+                // createMarker(results[i]);
+                var placeLoc = place.geometry.location;
+                var marker = new google.maps.Marker({
+                  map: map,
+                  position: place.geometry.location
+                });
+                // infoWindow2.open(map,marker);
+                marker.addListener('click', function() {
+                  infoWindow2.open(map, marker);
+                });   
+
                }
               }
             }
@@ -107,6 +141,10 @@
             map: map,
             position: place.geometry.location
           });
+          // infoWindow2.open(map,marker);
+        marker.addListener('click', function() {
+          infoWindow2.open(map, marker);
+        });     
         }
 
       function handleLocationError(browserHasGeolocation, infoWindow, pos) {
