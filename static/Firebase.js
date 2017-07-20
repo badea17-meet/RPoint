@@ -110,6 +110,12 @@ window.onload = function () {
   }
 });
   }
+  else if (path.includes("/results"))
+  {
+    alert("Results page");
+    var id = window.location.pathname.replace("/results/", "");
+    GetResultsData(id);
+  }
 }
 
 
@@ -122,10 +128,27 @@ firebase.auth().onAuthStateChanged(function(user) {
   } else {
     // No user is signed in.
   }
+
 });
 
 
+  function GetResultsData(id) {
+    var TestRef = database.ref("Tests/"+id);
+    TestRef.once('value').then(function(snapshot) {
+      var TestData = snapshot.val();
+      alert(TestData.age);
+      alert(TestData.freq);
+      alert(TestData.gender);
+      alert(TestData.result);
+      alert(TestData.weight);
+      var TimeEstimation=Number(TestData.result)/0.016;
+      var Hours = parseInt(TimeEstimation);
+      var Minutes = parseInt((TimeEstimation-Hours)*60);
+      document.getElementById("Time").write(Hors+":"+Minutes);
 
+      alert(Hours + ":" +Minutes);
+    });
+  }
 
 
     //place your code here, the scripts are all loaded

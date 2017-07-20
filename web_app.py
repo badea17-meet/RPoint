@@ -38,6 +38,11 @@ def SignUp():
 	return render_template("SignUp.html")
 
 
+@app.route("/results/<int:id>")
+def Results(id):
+	return render_template("Results.html")
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 
