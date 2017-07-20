@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -32,85 +30,134 @@
       // prompted by your browser. If you see the error "The Geolocation service
       // failed.", it means you probably did not give permission for the browser to
       // locate you.
-      var map, infoWindow;
+      var map, infoWindow, infoWindow2, pos;
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: -34.397, lng: 150.644},
           zoom: 16
         });
         infoWindow = new google.maps.InfoWindow;
-
+        infoWindow2 = new google.maps.InfoWindow;
         // Try HTML5 geolocation.
         if (navigator.geolocation)
         {
           // set user's current position
           navigator.geolocation.getCurrentPosition(function(position) 
           {
-            var pos = {
+             pos = {
               lat: position.coords.latitude,
               lng: position.coords.longitude
             };
-
             // put marker on user's position
             var marker = new google.maps.Marker({
               position: pos,
               map: map,
               title: 'My Location'
             });
-
-
             marker.setAnimation(google.maps.Animation.BOUNCE);
-            //infoWindow.open(map);
+            infoWindow.setContent('Current Location');
+            infoWindow.setPosition(pos)
+            infoWindow.open(map,marker);
             map.setCenter(pos);
-
-
-
               // get all the restaurant 
               var request = {
                 location: pos,
                 radius: 1000,
-                type: ['restaurant', 'cafe', 'parks']
+                type: [{{type}}]
               };
-
               service = new google.maps.places.PlacesService(map);
               service.nearbySearch(request, callback);
             
-
           }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
           });
-
-
         }
-
-
-
-
         else {
           // Browser doesn't support Geolocation
           handleLocationError(false, infoWindow, map.getCenter());
         }       
       }
-
+    
         function callback(results, status) {
+          
           if (status == google.maps.places.PlacesServiceStatus.OK) {
             for (var i = 0; i < results.length; i++) {
+                // var IsOpen = 'Open';
+                // // if(results[i].opening_hours.open_now){
+                // //   IsOpen = 'Open';
+                // // }
+                // // else{
+                // //   IsOpen = 'Closed'
+                // // }
+                // var contentString = '<h3>' + results[i].name + '</h3>' +
+                //                     '<p> Address: ' + results[i].formatted_address + '<br/>Contact: ' + results[i].formatted_phone_number + '<br/>' +
+                //                     'Status: ' + IsOpen + '<br/>' +
+                //                     'Rating: ' + results[i].rating + '/5';
+                                    
+                // infoWindow2 = new google.maps.InfoWindow({
+                //   content : contentString
+                // });
+                
+                // infoWindow2.setPosition(results[i].geometry.location);
                 var place = results[i];               
-                createMarker(results[i]);
+                createMarker(results[i], results);
                }
               }
             }
-
-        function createMarker(place) {
+        function createMarker(place, arr) {
           var placeLoc = place.geometry.location;
+
           var marker = new google.maps.Marker({
             map: map,
             position: place.geometry.location
           });
+
+          marker.addListener('click', function() {
+              infoWindow2.close()
+              markerDetails(marker, arr);
+          });     
         }
 
-      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-        infoWindow.setPosition(pos);
+        
+        
+        function markerDetails(marker, arr){
+          
+          var lat = marker.getPosition().lat();
+          var lng = marker.getPosition().lng();  
+
+
+          for (var i = 0; i < arr.length; i++){
+
+            if (arr[i].geometry.location.lat() == lat && arr[i].geometry.location.lng() == lng){
+                var contentString = '<h3>' + arr[i].name + '</h3>' +
+                                    '<p> Address: ' + arr[i].formatted_address + '<br/>Contact: ' + arr[i].formatted_phone_number + '<br/>' +
+                                    'Rating: ' + arr[i].rating + '/5' + '<br/><a href="#"> Go </a>';
+                                    
+
+                
+                infoWindow2 = new google.maps.InfoWindow({
+                  content : contentString
+                });
+                
+                
+                infoWindow2.setPosition(arr[i].geometry.location);
+                infoWindow2.open(map,marker);
+              }
+
+          }
+
+        }
+
+
+        //Walking direction from your position to a selected place
+        // function WalkingDirection(){
+
+        // }
+
+
+
+      function handleLocationError(browserHasGeolocation, infoWindow, pos1) {
+        infoWindow.setPosition(pos1);
         infoWindow.setContent(browserHasGeolocation ?
                               'Error: The Geolocation service failed.' :
                               'Error: Your browser doesn\'t support geolocation.');

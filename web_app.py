@@ -21,21 +21,18 @@ def allowed_file(filename):
 
 # App routes and website backend here
 
+
 @app.route("/")
 def Index():
-	return render_template("rpoint.html")
+	return render_template("homepage.html")
 
-@app.route("/login")
-def SignIn():
-	return render_template("LogIn.html")
+@app.route("/GoogleMaps/<string:types>")
+def googlemap(types):
+	return render_template("rpoint.html", types = types)
 
-@app.route("/verify")
-def verify():
-	return render_template("verify.html")
-
-@app.route("/signup")
-def SignUp():
-	return render_template("SignUp.html")
+@app.route("/results/<int:id>")
+def Results(id):
+	return render_template("Results.html")
 
 
 if __name__ == '__main__':
