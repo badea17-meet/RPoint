@@ -21,75 +21,75 @@ $.when(
   var signup = document.getElementById('signup');
   if (signup) {
   signup.onclick = function() {
-  	var email = document.getElementById('email').value;
-  	var password = document.getElementById('password').value;
-  	var confirmpass = document.getElementById('confpassword').value;
-  	if(password != confirmpass) {
-  		alert("The passwords do not match!");
-  	}
-  	else {
-  	auth.createUserWithEmailAndPassword(email, password).catch(function(error) {
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+    var confirmpass = document.getElementById('confpassword').value;
+    if(password != confirmpass) {
+      alert("The passwords do not match!");
+    }
+    else {
+    auth.createUserWithEmailAndPassword(email, password).catch(function(error) {
   // Handle Errors here.
   var errorCode = error.code;
   var errorMessage = error.message;
   alert(errorMessage);
 });
-  	alert("Account has been created successfully! Proceed to login!");
+    alert("Account has been created successfully! Proceed to login!");
     var user = auth.currentUser;
     alert (user);
-  	}
+    }
   }
-  	
-  	
+    
+    
   }
 
 
   var login = document.getElementById("login");
   if (login) {
   login.onclick = function() {
-  	var email = document.getElementById('email').value;
-  	var password = document.getElementById('password').value;
-  	auth.signInWithEmailAndPassword(email, password).catch(function(error) {
-  		var errorMessage=error.message;
-  		var errorCode = error.code;
-  		alert(errorCode);
-  		if(errorCode=="auth/user-not-found")
-  		{
-  			var response = confirm("E-mail is not registered! Click <a href=\"/signup\">here</a> to sign up!");
-  			if(response==true)
-  			{
-  				
-  			}
-  		}
-  		else if (errorCode=="auth/wrong-password")
-  		{
-  			var response = confirm("Incorrect password. Wish to reset your password?")
-  			if(response==true)
-  			{
-  				auth.sendPasswordResetEmail(email);
-  				alert("Password reset e-mail has been sent successfully!");
-  			}
-  		}
-  		alert(errorMessage);
-  	})
-  	if(auth.currentUser.emailVerified == false) {
-  		var response = confirm("Your account needs to be verified. Re-send verification e-mail?");
-  		if(response==true) {
-  			auth.currentUser.sendEmailVerification();
-  			alert("Verficiation e-mail has been sent. Please check your inbox");
-  		}
-  	}
-  	else {
-  		alert("Welcome back!");
-  	}
-  	
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+    auth.signInWithEmailAndPassword(email, password).catch(function(error) {
+      var errorMessage=error.message;
+      var errorCode = error.code;
+      alert(errorCode);
+      if(errorCode=="auth/user-not-found")
+      {
+        var response = confirm("E-mail is not registered! Click <a href=\"/signup\">here</a> to sign up!");
+        if(response==true)
+        {
+          
+        }
+      }
+      else if (errorCode=="auth/wrong-password")
+      {
+        var response = confirm("Incorrect password. Wish to reset your password?")
+        if(response==true)
+        {
+          auth.sendPasswordResetEmail(email);
+          alert("Password reset e-mail has been sent successfully!");
+        }
+      }
+      alert(errorMessage);
+    })
+    if(auth.currentUser.emailVerified == false) {
+      var response = confirm("Your account needs to be verified. Re-send verification e-mail?");
+      if(response==true) {
+        auth.currentUser.sendEmailVerification();
+        alert("Verficiation e-mail has been sent. Please check your inbox");
+      }
+    }
+    else {
+      alert("Welcome back!");
+    }
+    
   };
 }
 
 
 window.onload = function () {
-	var path = window.location.pathname;
-	if(path=="/") {
+  var path = window.location.pathname;
+  if(path=="/") {
     firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     alert("Logged in");
@@ -110,6 +110,12 @@ window.onload = function () {
   }
 });
   }
+  else if (path.includes("/results"))
+  {
+    alert("Results page");
+    var id = window.location.pathname.replace("/results/", "");
+    GetResultsData(id);
+  }
 }
 
 
@@ -122,10 +128,27 @@ firebase.auth().onAuthStateChanged(function(user) {
   } else {
     // No user is signed in.
   }
+
 });
 
 
+  function GetResultsData(id) {
+    var TestRef = database.ref("Tests/"+id);
+    TestRef.once('value').then(function(snapshot) {
+      var TestData = snapshot.val();
+      // alert(TestData.age);
+      // alert(TestData.freq);
+      // alert(TestData.gender);
+      // alert(TestData.result);
+      // alert(TestData.weight);
+      var TimeEstimation=Number(TestData.result)/0.016;
+      var Hours = parseInt(TimeEstimation);
+      var Minutes = parseInt((TimeEstimation-Hours)*60);
+      document.getElementById("Time").innerText = Hours+":"+Minutes;
 
+      alert(Hours + ":" +Minutes);
+    });
+  }
 
 
     //place your code here, the scripts are all loaded
