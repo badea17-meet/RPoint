@@ -112,7 +112,7 @@ window.onload = function () {
   }
   else if (path.includes("/results"))
   {
-    alert("Results page");
+    // alert("Results page");
     var id = window.location.pathname.replace("/results/", "");
     GetResultsData(id);
   }
@@ -144,9 +144,10 @@ firebase.auth().onAuthStateChanged(function(user) {
       var TimeEstimation=Number(TestData.result)/0.016;
       var Hours = parseInt(TimeEstimation);
       var Minutes = parseInt((TimeEstimation-Hours)*60);
-      document.getElementById("Time").innerText = Hours+":"+Minutes;
+      document.getElementById("timeresult").innerText+="  "+Hours+":"+Minutes;
+      document.getElementById("result").innerText+="   "+TestData.result;
 
-      alert(Hours + ":" +Minutes);
+      // alert(Hours + ":" +Minutes);
     });
   }
 

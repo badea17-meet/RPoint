@@ -30,7 +30,7 @@
       // prompted by your browser. If you see the error "The Geolocation service
       // failed.", it means you probably did not give permission for the browser to
       // locate you.
-      var map, infoWindow, infoWindow2, pos;
+      var map, infoWindow, infoWindow2, pos, directionsService, directionsDisplay;
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: -34.397, lng: 150.644},
@@ -38,6 +38,10 @@
         });
         infoWindow = new google.maps.InfoWindow;
         infoWindow2 = new google.maps.InfoWindow;
+        directionsService = new google.maps.DirectionsService;
+        directionsDisplay = new google.maps.DirectionsRenderer;
+        directionsDisplay.setMap(map);
+
         // Try HTML5 geolocation.
         if (navigator.geolocation)
         {
@@ -63,7 +67,7 @@
               var request = {
                 location: pos,
                 radius: 1000,
-                type: [{{type}}]
+                type: ['{{ types }}']
               };
               service = new google.maps.places.PlacesService(map);
               service.nearbySearch(request, callback);
@@ -131,28 +135,41 @@
             if (arr[i].geometry.location.lat() == lat && arr[i].geometry.location.lng() == lng){
                 var contentString = '<h3>' + arr[i].name + '</h3>' +
                                     '<p> Address: ' + arr[i].formatted_address + '<br/>Contact: ' + arr[i].formatted_phone_number + '<br/>' +
-                                    'Rating: ' + arr[i].rating + '/5' + '<br/><a href="#"> Go </a>';
+                                    'Rating: ' + arr[i].rating + '/5' + '<br/><a id="go"></a>';
                                     
 
                 
                 infoWindow2 = new google.maps.InfoWindow({
                   content : contentString
                 });
-                
-                
+              
                 infoWindow2.setPosition(arr[i].geometry.location);
                 infoWindow2.open(map,marker);
+
+
+                document.getElementById('go').addEventListener('click', WalkingDirections(lat,lng))
               }
-
           }
-
         }
 
 
-        //Walking direction from your position to a selected place
-        // function WalkingDirection(){
-
-        // }
+        function WalkingDirections(lat,lng){
+            destination={
+              lat: lat,
+              lng: lng
+            };
+            directionsService.route({
+              origin: pos,
+              destination: destination,
+              travelMode: 'WALKING'
+            }, function(response, status) {
+          if (status === 'OK') {
+            directionsDisplay.setDirections(response);
+            } else {
+            window.alert('Directions request failed due to ' + status);
+            }
+          });
+        }
 
 
 
